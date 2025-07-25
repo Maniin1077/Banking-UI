@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Responsive Banking Interface</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f4f4f9, #e0f7fa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .bank-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 25px;
+      color: #222;
+    }
+
+    .balance-card {
+      background-color: #e9fbe9;
+      border: 2px dashed #4caf50;
+      color: #2e7d32;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+    }
+
+    .btn {
+      padding: 14px 24px;
+      margin: 12px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      width: 45%;
+    }
+
+    .btn-deposit {
+      background-color: #4caf50;
+      color: #fff;
+    }
+
+    .btn-withdraw {
+      background-color: #f44336;
+      color: #fff;
+    }
+
+    .btn:hover {
+      opacity: 0.95;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      .btn {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .bank-container {
+        padding: 30px 20px;
+      }
+
+      .balance-card {
+        font-size: 22px;
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bank-container">
+    <h2>My Bank Dashboard</h2>
+    <div class="balance-card">
+      Balance: ₹<span id="balance">5000</span>
+    </div>
+    <div>
+      <button class="btn btn-deposit" onclick="deposit()">Deposit ₹500</button>
+      <button class="btn btn-withdraw" onclick="withdraw()">Withdraw ₹500</button>
+    </div>
+    <div class="message" id="statusMessage"></div>
+  </div>
+
+  <script>
+    let balance = 5000;
+    const balanceEl = document.getElementById("balance");
+    const messageEl = document.getElementById("statusMessage");
+
+    function updateBalance() {
+      balanceEl.textContent = balance;
+    }
+
+    function showMessage(msg, color = "#333") {
+      messageEl.textContent = msg;
+      messageEl.style.color = color;
+    }
+
+    function deposit() {
+      balance += 500;
+      updateBalance();
+      showMessage("✅ Deposit Successful!", "#2e7d32");
+    }
+
+    function withdraw() {
+      if (balance >= 500) {
+        balance -= 500;
+        updateBalance();
+        showMessage("✅ Withdrawal Successful!", "#2e7d32");
+      } else {
+        showMessage("⚠️ Insufficient Balance!", "#d32f2f");
+      }
+    }
+  </script>
+
+</body>
+</html>
