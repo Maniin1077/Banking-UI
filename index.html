@@ -3,148 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Responsive Banking Interface</title>
+  <title>Responsive Banking UI</title>
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #f4f4f9, #e0f7fa);
+      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       padding: 20px;
     }
 
     .bank-container {
-      background: #fff;
+      background-color: #fff;
       padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-      text-align: center;
-      max-width: 480px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      max-width: 500px;
       width: 100%;
+      text-align: center;
     }
 
     h2 {
-      font-size: 26px;
       margin-bottom: 25px;
-      color: #222;
+      font-size: 26px;
     }
 
-    .balance-card {
-      background-color: #e9fbe9;
-      border: 2px dashed #4caf50;
-      color: #2e7d32;
-      font-size: 24px;
+    .balance-box {
+      border: 2px dashed green;
+      padding: 20px;
+      border-radius: 10px;
       font-weight: bold;
-      padding: 25px;
+      font-size: 22px;
+      color: green;
       margin-bottom: 30px;
-      border-radius: 8px;
+      background-color: #e8f5e9;
     }
 
-    .btn {
-      padding: 14px 24px;
-      margin: 12px;
-      font-size: 18px;
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .buttons button {
+      padding: 14px 30px;
+      font-size: 17px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s ease;
-      width: 45%;
+      transition: 0.3s;
     }
 
-    .btn-deposit {
-      background-color: #4caf50;
-      color: #fff;
+    .deposit-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: 2px solid #333;
     }
 
-    .btn-withdraw {
+    .deposit-btn:hover {
+      background-color: #45a049;
+    }
+
+    .withdraw-btn {
       background-color: #f44336;
-      color: #fff;
+      color: white;
     }
 
-    .btn:hover {
-      opacity: 0.95;
+    .withdraw-btn:hover {
+      background-color: #d32f2f;
     }
 
-    .message {
-      margin-top: 20px;
+    .status {
       font-size: 16px;
-      font-weight: 500;
-      color: #555;
+      color: teal;
+      margin-bottom: 20px;
     }
 
-    @media (max-width: 600px) {
-      .btn {
-        width: 100%;
-        margin: 10px 0;
+    .history {
+      text-align: left;
+      margin-top: 25px;
+    }
+
+    .history h4 {
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .history ul {
+      padding-left: 20px;
+    }
+
+    .history li {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 500px) {
+      .buttons {
+        flex-direction: column;
+        gap: 15px;
       }
 
       .bank-container {
         padding: 30px 20px;
       }
-
-      .balance-card {
-        font-size: 22px;
-        padding: 20px;
-      }
-
-      h2 {
-        font-size: 22px;
-      }
     }
   </style>
 </head>
 <body>
-
   <div class="bank-container">
     <h2>My Bank Dashboard</h2>
-    <div class="balance-card">
-      Balance: ₹<span id="balance">5000</span>
+    <div class="balance-box" id="balance">Balance: ₹5000</div>
+
+    <div class="buttons">
+      <button class="deposit-btn" onclick="deposit()">Deposit ₹500</button>
+      <button class="withdraw-btn" onclick="withdraw()">Withdraw ₹500</button>
     </div>
-    <div>
-      <button class="btn btn-deposit" onclick="deposit()">Deposit ₹500</button>
-      <button class="btn btn-withdraw" onclick="withdraw()">Withdraw ₹500</button>
+
+    <div class="status" id="statusMsg"></div>
+
+    <div class="history">
+      <h4>Transaction History:</h4>
+      <ul id="transactionList"></ul>
     </div>
-    <div class="message" id="statusMessage"></div>
   </div>
 
   <script>
     let balance = 5000;
     const balanceEl = document.getElementById("balance");
-    const messageEl = document.getElementById("statusMessage");
+    const statusEl = document.getElementById("statusMsg");
+    const historyEl = document.getElementById("transactionList");
 
-    function updateBalance() {
-      balanceEl.textContent = balance;
+    function updateBalanceDisplay() {
+      balanceEl.textContent = `Balance: ₹${balance}`;
     }
 
-    function showMessage(msg, color = "#333") {
-      messageEl.textContent = msg;
-      messageEl.style.color = color;
+    function getFormattedTime() {
+      const now = new Date();
+      return now.toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    }
+
+    function addToHistory(text) {
+      const li = document.createElement("li");
+      li.textContent = `${text} at ${getFormattedTime()}`;
+      historyEl.prepend(li);
     }
 
     function deposit() {
       balance += 500;
-      updateBalance();
-      showMessage("✅ Deposit Successful!", "#2e7d32");
+      updateBalanceDisplay();
+      statusEl.textContent = "Deposit Successful";
+      addToHistory("Deposited ₹500");
     }
 
     function withdraw() {
       if (balance >= 500) {
         balance -= 500;
-        updateBalance();
-        showMessage("✅ Withdrawal Successful!", "#2e7d32");
+        updateBalanceDisplay();
+        statusEl.textContent = "Withdrawal Successful";
+        addToHistory("Withdrew ₹500");
       } else {
-        showMessage("⚠️ Insufficient Balance!", "#d32f2f");
+        statusEl.textContent = "Insufficient Balance";
       }
     }
   </script>
-
 </body>
 </html>
