@@ -3,182 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Responsive Banking UI</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #e0f7fa, #e8f5e9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      padding: 20px;
-    }
-
-    .bank-container {
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-      max-width: 500px;
-      width: 100%;
-      text-align: center;
-    }
-
-    h2 {
-      margin-bottom: 25px;
-      font-size: 26px;
-    }
-
-    .balance-box {
-      border: 2px dashed green;
-      padding: 20px;
-      border-radius: 10px;
-      font-weight: bold;
-      font-size: 22px;
-      color: green;
-      margin-bottom: 30px;
-      background-color: #e8f5e9;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .buttons button {
-      padding: 14px 30px;
-      font-size: 17px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .deposit-btn {
-      background-color: #4CAF50;
-      color: white;
-      border: 2px solid #333;
-    }
-
-    .deposit-btn:hover {
-      background-color: #45a049;
-    }
-
-    .withdraw-btn {
-      background-color: #f44336;
-      color: white;
-    }
-
-    .withdraw-btn:hover {
-      background-color: #d32f2f;
-    }
-
-    .status {
-      font-size: 16px;
-      color: teal;
-      margin-bottom: 20px;
-    }
-
-    .history {
-      text-align: left;
-      margin-top: 25px;
-    }
-
-    .history h4 {
-      margin-bottom: 12px;
-      font-size: 18px;
-    }
-
-    .history ul {
-      padding-left: 20px;
-    }
-
-    .history li {
-      font-size: 16px;
-      margin-bottom: 6px;
-    }
-
-    @media (max-width: 500px) {
-      .buttons {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .bank-container {
-        padding: 30px 20px;
-      }
-    }
-  </style>
+  <title>Basic Banking UI</title>
 </head>
-<body>
-  <div class="bank-container">
-    <h2>My Bank Dashboard</h2>
-    <div class="balance-box" id="balance">Balance: ₹5000</div>
+<body style="font-family: Arial, sans-serif; background: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh;">
 
-    <div class="buttons">
-      <button class="deposit-btn" onclick="deposit()">Deposit ₹500</button>
-      <button class="withdraw-btn" onclick="withdraw()">Withdraw ₹500</button>
+  <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 90%; max-width: 400px;">
+    <h2>My Bank Account</h2>
+
+    <div style="background-color: #e0f7fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+      <p style="margin: 0; color: #00796b;">Current Balance</p>
+      <h3 id="balance" style="color: #004d40;">₹10000</h3>
     </div>
 
-    <div class="status" id="statusMsg"></div>
+    <div>
+      <input type="number" id="amount" placeholder="Enter amount" style="padding: 10px; width: 90%; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;" />
+    </div>
 
-    <div class="history">
-      <h4>Transaction History:</h4>
-      <ul id="transactionList"></ul>
+    <div style="display: flex; gap: 10px; flex-direction: column;">
+      <button onclick="deposit()" style="padding: 10px; background-color: #4caf50; color: white; border: none; border-radius: 5px;">Deposit</button>
+      <button onclick="withdraw()" style="padding: 10px; background-color: #f44336; color: white; border: none; border-radius: 5px;">Withdraw</button>
     </div>
   </div>
 
   <script>
-    let balance = 5000;
-    const balanceEl = document.getElementById("balance");
-    const statusEl = document.getElementById("statusMsg");
-    const historyEl = document.getElementById("transactionList");
+    let balance = 10000;
 
-    function updateBalanceDisplay() {
-      balanceEl.textContent = `Balance: ₹${balance}`;
-    }
-
-    function getFormattedTime() {
-      const now = new Date();
-      return now.toLocaleTimeString([], {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      });
-    }
-
-    function addToHistory(text) {
-      const li = document.createElement("li");
-      li.textContent = `${text} at ${getFormattedTime()}`;
-      historyEl.prepend(li);
+    function updateBalance() {
+      document.getElementById("balance").innerText = "₹" + balance.toLocaleString();
     }
 
     function deposit() {
-      balance += 500;
-      updateBalanceDisplay();
-      statusEl.textContent = "Deposit Successful";
-      addToHistory("Deposited ₹500");
+      let amt = parseFloat(document.getElementById("amount").value);
+      if (!isNaN(amt) && amt > 0) {
+        balance += amt;
+        updateBalance();
+        document.getElementById("amount").value = "";
+      } else {
+        alert("Please enter a valid deposit amount.");
+      }
     }
 
     function withdraw() {
-      if (balance >= 500) {
-        balance -= 500;
-        updateBalanceDisplay();
-        statusEl.textContent = "Withdrawal Successful";
-        addToHistory("Withdrew ₹500");
+      let amt = parseFloat(document.getElementById("amount").value);
+      if (!isNaN(amt) && amt > 0) {
+        if (amt <= balance) {
+          balance -= amt;
+          updateBalance();
+          document.getElementById("amount").value = "";
+        } else {
+          alert("Insufficient balance.");
+        }
       } else {
-        statusEl.textContent = "Insufficient Balance";
+        alert("Please enter a valid withdrawal amount.");
       }
     }
   </script>
+
 </body>
 </html>
